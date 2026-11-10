@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1b7f3b">
+<title>English-Pashto Geological & Mining Dictionary</title>
+<style>
+:root{--g:#1b7f3b;--g2:#145e2c;--bg:#f2f5f2;--card:#fff;--tx:#1d2a20;--mut:#6b7a6e;--sep:#dfe6df;--acc:#e8f4ea}
+:root[data-theme=dark]{--g:#1f6b38;--g2:#174f2a;--bg:#101512;--card:#18201a;--tx:#e6efe8;--mut:#9aab9d;--sep:#2a352c;--acc:#203024}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:system-ui,Roboto,Arial,sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column}
+.ps{font-family:"Noto Naskh Arabic","Scheherazade New",Tahoma,Arial,sans-serif;direction:rtl}
+header{background:var(--g);color:#fff;padding:10px 12px 12px;box-shadow:0 2px 6px #0004}
+.top{display:flex;align-items:center;justify-content:space-between}
+.top h1{font-size:20px;margin:0;font-weight:600;letter-spacing:.5px}
+.ib{background:none;border:0;color:#fff;font-size:26px;width:42px;height:42px;border-radius:50%}
+.ib:active{background:#fff3}
+.search{display:flex;background:#fff;border-radius:24px;margin-top:6px;padding:0 14px;align-items:center}
+.search input{flex:1;border:0;outline:0;font-size:16px;padding:12px 6px;background:none;color:#222}
+.tog{display:flex;gap:8px;margin-top:10px}
+.tog button,.sel{flex:1;padding:9px;border-radius:20px;border:1px solid #fff8;background:transparent;color:#fff;font-size:14px}
+.tog button.on{background:#fff;color:var(--g2);font-weight:700}
+.sel{background:var(--g2);appearance:none;text-align:center}
+.info{display:flex;justify-content:space-between;padding:8px 14px;font-size:13px;color:var(--mut)}
+.main{flex:1;display:flex;min-height:0}
+#list{flex:1;overflow-y:auto;background:var(--card);margin:0 0 0 8px;border-radius:12px 0 0 12px}
+.az{width:24px;display:flex;flex-direction:column;justify-content:space-between;padding:4px 0;font-size:11px;color:var(--g);text-align:center;font-weight:700}
+.az span{flex:1;display:flex;align-items:center;justify-content:center}
+.az span.on{background:var(--g);color:#fff;border-radius:6px}
+.it{border-bottom:1px solid var(--sep);padding:12px 12px}
+.row{display:flex;align-items:center;gap:8px}
+.wd{flex:1}
+.wd b{font-size:17px;display:block}
+.wd .p{font-size:17px;color:var(--g);margin-top:2px}
+:root[data-theme=dark] .wd .p{color:#6fd08a}
+.heart{background:none;border:0;font-size:24px;color:var(--mut)}
+.heart.f{color:#e53950}
+.det{display:none;margin-top:10px;background:var(--acc);border-radius:10px;padding:10px;font-size:14px;line-height:1.6}
+.it.open .det{display:block}
+.det .ps{font-size:16px;margin-top:6px}
+.tag{display:inline-block;font-size:11px;background:var(--g);color:#fff;border-radius:10px;padding:2px 8px;margin-top:6px}
+.spk{margin-top:8px;background:var(--g);color:#fff;border:0;border-radius:18px;padding:8px 14px;font-size:14px}
+.empty{text-align:center;padding:40px 10px;color:var(--mut)}
+#ov{position:fixed;inset:0;background:#0007;display:none;z-index:5}
+#dr{position:fixed;top:0;bottom:0;left:0;width:78%;max-width:300px;background:var(--card);transform:translateX(-100%);transition:.25s;z-index:6;display:flex;flex-direction:column}
+#dr.o{transform:none}
+#dr h2{background:var(--g);color:#fff;margin:0;padding:22px 16px;font-size:18px}
+#dr a{padding:16px;border-bottom:1px solid var(--sep);font-size:16px}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:9;padding:20px}
+.modal .bx{background:var(--card);border-radius:14px;padding:20px;width:100%;max-width:360px;line-height:1.8}
+.modal h3{margin:0 0 8px;color:var(--g)}
+.modal button{margin-top:12px;background:var(--g);color:#fff;border:0;border-radius:18px;padding:9px 20px}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><button class="ib" id="mb" aria-label="Menu">&#9776;</button><h1>Dictionary</h1><button class="ib" id="fb" aria-label="Favorites">&#9825;</button></div>
+  <div class="search"><span>&#128269;</span><input id="q" type="search" placeholder="Search / لټون" autocomplete="off"></div>
+  <div class="tog"><button id="le" class="on">English</button><button id="lp" class="ps">پښتو</button><select id="cat" class="sel"></select></div>
+</header>
+<div class="info"><span id="cnt"></span><span id="tot"></span></div>
+<div class="main"><div id="list"></div><div class="az" id="az"></div></div>
+
+<div id="ov"></div>
+<nav id="dr">
+  <h2>Geo &amp; Mining Dictionary</h2>
+  <a id="mAll">&#128214; All Words</a>
+  <a id="mFav">&#10084; Favorites</a>
+  <a id="mDark">&#127769; Dark / Light Mode</a>
+  <a id="mAbout">&#8505; About</a>
+</nav>
+<div class="modal" id="ab"><div class="bx">
+  <h3>About</h3>
+  <div class="ps" style="font-size:17px">
+    <b>نوم:</b> انجینر مرسلین محمدي<br>
+  </div>
+  <div>University: Nangarhar University<br>Faculty: Science Faculty<br>Department: Geology and Mining<br>Semester: Third Semester</div>
+  <button id="abx">Close</button>
+</div></div>
+
+<script>
+/* [English, Pashto, Pronunciation, Category, English explanation, Pashto explanation] */
+const RAW=[
+["Rock","ډبره","/rɒk/","Geology","A solid natural mass made of one or more minerals.","د یو یا څو کانړو څخه جوړ جامد طبیعي ماده."],
+["Mineral","کانړی","/ˈmɪn.ər.əl/","Mineralogy","A naturally occurring inorganic solid with a definite chemical composition.","طبیعي غیر عضوي جامد جسم چې ټاکلی کیمیاوي جوړښت لري."],
+["Quartz","کوارټز","/kwɔːrts/","Mineralogy","A hard mineral made of silicon dioxide (SiO2).","سخت کانړی چې د سیلیکون ډای اکسایډ څخه جوړ دی."],
+["Feldspar","فلدسپار","/ˈfeld.spɑːr/","Mineralogy","The most abundant group of minerals in the Earth's crust.","د ځمکې په پوسته کې تر ټولو ډېر موندل کېدونکی کانړی ګروپ."],
+["Mica","میکا","/ˈmaɪ.kə/","Mineralogy","A sheet silicate mineral that splits into thin flexible layers.","پاڼه‌ییز سیلیکیټي کانړی چې په نازکو نرمو طبقو ویشل کېږي."],
+["Talc","ټالک","/tælk/","Mineralogy","The softest mineral, with Mohs hardness of 1.","تر ټولو نرم کانړی چې د موهس سختوالی یې ۱ دی."],
+["Gypsum","جپسم","/ˈdʒɪp.səm/","Mineralogy","A soft sulfate mineral used in plaster and cement.","نرم سلفیټي کانړی چې په ګچ او سیمنټ کې کارول کېږي."],
+["Calcite","کلسایټ","/ˈkæl.saɪt/","Mineralogy","A carbonate mineral (CaCO3), main component of limestone.","کاربونیټي کانړی (CaCO3) چې د چونې ډبرې اصلي برخه ده."],
+["Cleavage","ښویدنه","/ˈkliː.vɪdʒ/","Mineralogy","The tendency of a mineral to break along flat planes.","د کانړي هغه ځانګړتیا چې د هواري سطحو په اوږدو ماتېږي."],
+["Hardness","سختوالی","/ˈhɑːrd.nəs/","Mineralogy","Resistance of a mineral to scratching, measured on the Mohs scale.","د کانړي د خراش مقاومت چې د موهس په کچه اندازه کېږي."],
+["Luster","ځلا","/ˈlʌs.tər/","Mineralogy","The way a mineral surface reflects light.","هغه طریقه چې د کانړي سطحه رڼا منعکسوي."],
+["Emerald","زمرد","/ˈem.ər.əld/","Mineralogy","A green gem variety of the mineral beryl.","د بیریل کانړي زرغون قیمتي ډبره."],
+["Lapis lazuli","لاجورد","/ˈlæp.ɪs ˈlæz.jə.li/","Mineralogy","A deep blue metamorphic rock valued as a gemstone.","ژور نیلي رنګ دګړدیسه ډبره چې قیمتي ډبره ګڼل کېږي."],
+["Tourmaline","تورمالین","/ˈtʊr.mə.lɪn/","Mineralogy","A boron silicate gem mineral found in many colors.","د بورون سیلیکیټي قیمتي کانړی چې په مختلفو رنګونو موندل کېږي."],
+["Granite","ګرانیټ","/ˈɡræn.ɪt/","Petrology","A coarse-grained intrusive igneous rock rich in quartz and feldspar.","درشت دانه‌دار ننوتونکې اورین ډبره چې کوارټز او فلدسپار ډېر لري."],
+["Basalt","بیسالټ","/bəˈsɔːlt/","Petrology","A dark fine-grained extrusive igneous rock.","توره نرمه دانه‌دار بهر راتلونکې اورین ډبره."],
+["Limestone","چونه ډبره","/ˈlaɪm.stoʊn/","Petrology","A sedimentary rock composed mainly of calcium carbonate.","رسوبي ډبره چې ډېره برخه یې کلسیم کاربونیټ دی."],
+["Sandstone","شګلنه ډبره","/ˈsænd.stoʊn/","Petrology","A sedimentary rock made of cemented sand grains.","رسوبي ډبره چې د ټینګ شوو شګو دانو څخه جوړه ده."],
+["Shale","خټینه ډبره","/ʃeɪl/","Petrology","A fine-grained sedimentary rock formed from compacted mud.","نرمه دانه‌دار رسوبي ډبره چې له فشرده خټو جوړېږي."],
+["Marble","مرمر","/ˈmɑːr.bəl/","Petrology","A metamorphic rock formed from limestone.","دګړدیسه ډبره چې له چونې ډبرې جوړېږي."],
+["Gneiss","ګنایس","/naɪs/","Petrology","A banded high-grade metamorphic rock.","پټیدار لوړ درجې دګړدیسه ډبره."],
+["Schist","شیست","/ʃɪst/","Petrology","A foliated metamorphic rock that splits into thin sheets.","پاڼه‌ییزه دګړدیسه ډبره چې په نازکو پاڼو ویشل کېږي."],
+["Crystal","بلور","/ˈkrɪs.təl/","Crystallography","A solid whose atoms are arranged in a repeating ordered pattern.","جامد جسم چې اتومونه یې په تکراري منظم ډول ځای پر ځای شوي وي."],
+["Lattice","جالۍ جوړښت","/ˈlæt.ɪs/","Crystallography","The regular three-dimensional arrangement of atoms in a crystal.","په بلور کې د اتومونو منظم درې‌اړخیز ترتیب."],
+["Magma","ماګما","/ˈmæɡ.mə/","Volcanology","Molten rock beneath the Earth's surface.","د ځمکې لاندې ویلې شوې ډبره."],
+["Lava","لاوا","/ˈlɑː.və/","Volcanology","Molten rock that has erupted onto the surface.","ویلې شوې ډبره چې د ځمکې پر مخ راوتلې وي."],
+["Volcano","اورښکونکی غر","/vɒlˈkeɪ.noʊ/","Volcanology","An opening in the crust through which magma and gases erupt.","په پوسته کې سوری چې له لارې یې ماګما او ګازونه راوځي."],
+["Earthquake","زلزله","/ˈɜːrθ.kweɪk/","Seismology","Sudden shaking of the ground caused by release of energy in the crust.","د ځمکې ناڅاپي ټکان چې د پوسته په انرژۍ خوشې کېدو رامنځته کېږي."],
+["Epicenter","د زلزلې سطحي مرکز","/ˈep.ɪ.sen.tər/","Seismology","The point on the surface directly above an earthquake's focus.","په سطحه کې هغه نقطه چې د زلزلې د کانون په مستقیم ډول پورته ده."],
+["Seismograph","سیسموګراف","/ˈsaɪz.mə.ɡræf/","Seismology","An instrument that records ground motion.","وسیله چې د ځمکې حرکت ثبتوي."],
+["Fault","شکست (فالټ)","/fɔːlt/","Structural Geology","A fracture in rock along which movement has occurred.","په ډبره کې درز چې د هغه په اوږدو کې حرکت شوی وي."],
+["Fold","چین","/foʊld/","Structural Geology","A bend in rock layers caused by compressive stress.","د ډبرو په طبقو کې کوږوالی چې د فشار له امله رامنځته کېږي."],
+["Anticline","پورته چین","/ˈæn.tɪ.klaɪn/","Structural Geology","An arch-shaped fold with the oldest rocks at its core.","ټاغ‌ډوله چین چې زړې ډبرې یې په مرکز کې وي."],
+["Syncline","ښکته چین","/ˈsɪŋ.klaɪn/","Structural Geology","A trough-shaped fold with the youngest rocks at its core.","ناوه‌ډوله چین چې ځوانې ډبرې یې په مرکز کې وي."],
+["Joint","درز","/dʒɔɪnt/","Structural Geology","A fracture in rock without noticeable displacement.","په ډبره کې ماتوالی چې د پام وړ حرکت پکې نه وي."],
+["Seismic wave","زلزلیزه څپه","/ˈsaɪz.mɪk weɪv/","Geophysics","Energy wave that travels through the Earth during an earthquake.","انرژیکه څپه چې د زلزلې پر مهال د ځمکې له منځه تیریږي."],
+["Gravity anomaly","د جاذبې بې‌نظمي","/ˈɡræv.ə.ti əˈnɒm.ə.li/","Geophysics","A deviation of measured gravity from the expected value.","د جاذبې د اندازه شوي ارزښت انحراف له تمه شوي ارزښت څخه."],
+["Isotope","ایزوټوپ","/ˈaɪ.sə.toʊp/","Geochemistry","Atoms of the same element with different numbers of neutrons.","د یو عنصر اتومونه چې د نیوټرونونو شمېر یې توپیر لري."],
+["Groundwater","د ځمکې لاندې اوبه","/ˈɡraʊnd.wɔː.tər/","Hydrogeology","Water stored in soil and rock beneath the surface.","هغه اوبه چې د ځمکې لاندې په خاورو او ډبرو کې زېرمه وي."],
+["Aquifer","اوبلرونکی طبقه","/ˈæk.wɪ.fər/","Hydrogeology","A rock layer that stores and transmits groundwater.","د ډبرې طبقه چې ځمکنۍ اوبه ذخیره او لېږدوي."],
+["Permeability","نفوذیتوب","/ˌpɜːr.mi.əˈbɪl.ə.ti/","Hydrogeology","The ability of a material to let fluids pass through it.","د یو مادې وړتیا چې مایعات پرې تېر شي."],
+["Porosity","سوریتوب","/pɔːˈrɒs.ə.ti/","Hydrogeology","The proportion of void space in a rock.","په ډبره کې د تشو ځایونو تناسب."],
+["Fossil","فوسیل","/ˈfɒs.əl/","Paleontology","The preserved remains or traces of ancient life.","د پخوانیو ژوندیو موجوداتو ساتل شوې پاتې شونې یا نښې."],
+["Stratigraphy","طبقه‌پوهنه","/strəˈtɪɡ.rə.fi/","Geological Mapping","The study of rock layers and their order.","د ډبرو د طبقو او ترتیب مطالعه."],
+["Contour line","همږغه کرښه","/ˈkɒn.tʊr laɪn/","Geological Mapping","A map line joining points of equal elevation.","په نقشه کې کرښه چې مساوي لوړوالي نقطې سره نښلوي."],
+["Drill","برمه","/drɪl/","Mining Equipment","A machine used to bore holes in rock.","ماشین چې په ډبره کې سوري جوړوي."],
+["Excavator","کیندونکی ماشین","/ˈek.skə.veɪ.tər/","Mining Equipment","A heavy machine used to dig and load material.","درانه ماشین چې د کیندلو او بارولو لپاره کارول کېږي."],
+["Conveyor belt","لېږدونکی پټه","/kənˈveɪ.ər belt/","Mining Equipment","A moving belt that carries ore or material.","خوځنده پټه چې کانه یا مواد لېږدوي."],
+["Tunnel","سرنګ","/ˈtʌn.əl/","Mining Engineering","A horizontal underground passage.","د ځمکې لاندې افقي لار."],
+["Shaft","عمودي کنده","/ʃæft/","Mining Engineering","A vertical passage used to access underground workings.","عمودي لار چې د ځمکې لاندې کار ځایونو ته د رسېدو لپاره کارول کېږي."],
+["Blasting","چاودنه","/ˈblæs.tɪŋ/","Mining Engineering","Breaking rock using explosives.","د چاودیدونکو توکو په مرسته د ډبرو ماتول."],
+["Open-pit mine","پرانستی کان","/ˈoʊ.pən pɪt maɪn/","Mining Engineering","A surface mine excavated in a stepped pit.","سطحي کان چې په پوړ پوړ کنده کې کیندل کېږي."],
+["Ore","کانه","/ɔːr/","Ore Deposits","A rock containing metal that can be mined profitably.","ډبره چې فلز ولري او په ګټه کیندل کېدای شي."],
+["Gold","سره زر","/ɡoʊld/","Economic Geology","A dense yellow precious metal (Au).","درانده زېړ قیمتي فلز (Au)."],
+["Copper","مس","/ˈkɒp.ər/","Economic Geology","A reddish metal (Cu) with high electrical conductivity.","سور رنګه فلز (Cu) چې برېښنا ښه تیروي."],
+["Chromite","کرومایټ","/ˈkroʊ.maɪt/","Ore Deposits","The main ore mineral of chromium.","د کروم اصلي کانه کانړی."],
+["Coal","سکاره","/koʊl/","Economic Geology","A combustible sedimentary rock rich in carbon.","سوځېدونکې رسوبي ډبره چې کاربون ډېر لري."],
+["Erosion","فرسایش","/ɪˈroʊ.ʒən/","Environmental Geology","Removal of soil and rock by wind, water, or ice.","د باد، اوبو یا یخ په واسطه د خاورې او ډبرو لیرې کېدل."],
+["Landslide","د ځمکې ښویدنه","/ˈlænd.slaɪd/","Environmental Geology","Downslope movement of rock and soil.","د ډبرو او خاورو د ډاډې په لور حرکت."],
+["Sediment","رسوب","/ˈsed.ɪ.mənt/","Sedimentology","Solid particles settled from water, wind, or ice.","جامد ذرې چې له اوبو، باد یا یخ څخه ځای پر ځای شوي وي."],
+["Stress","فشار","/stres/","Rock Mechanics","Force applied per unit area within a rock mass.","په ډبره کې د واحد مساحت پر سر وارد شوی ځواک."],
+["Density","کثافت","/ˈden.sə.ti/","General Scientific Terms","Mass per unit volume of a substance.","د یو مادې کتله د حجم په هر واحد کې."],
+["Crust","پوسته","/krʌst/","Geology","The thin outermost layer of the Earth.","د ځمکې تر ټولو بهرنۍ نازکه طبقه."],
+["Mantle","مینځنۍ طبقه (مینټل)","/ˈmæn.təl/","Geology","The thick layer between the crust and the core.","ضخیمه طبقه د پوسته او هسته ترمنځ."],
+["Hypothesis","فرضیه","/haɪˈpɒθ.ə.sɪs/","General Scientific Terms","A testable explanation proposed for an observation.","د یوې لیدنې لپاره وړاندیز شوې آزمویل کېدونکې تشریح."]
+];
+const D=RAW.map(r=>({w:r[0],p:r[1],pr:r[2],c:r[3],e:r[4],x:r[5]})).sort((a,b)=>a.w.localeCompare(b.w));
+const CATS=["Geology","Mineralogy","Petrology","Crystallography","Mining Engineering","Economic Geology","Structural Geology","Geophysics","Geochemistry","Hydrogeology","Paleontology","Volcanology","Seismology","Geological Mapping","Mining Equipment","Ore Deposits","Environmental Geology","Sedimentology","Rock Mechanics","General Scientific Terms"];
+const $=id=>document.getElementById(id);
+const S={lang:"en",cat:"",letter:"",fav:false};
+let favs=[];try{favs=JSON.parse(localStorage.getItem("gmd_fav")||"[]")}catch(e){}
+const saveFav=()=>{try{localStorage.setItem("gmd_fav",JSON.stringify(favs))}catch(e){}};
+
+$("cat").innerHTML='<option value="">All Categories</option>'+CATS.map(c=>`<option>${c}</option>`).join("");
+$("az").innerHTML="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(l=>`<span data-l="${l}">${l}</span>`).join("");
+$("tot").textContent="Total: "+D.length;
+
+function render(){
+  const q=$("q").value.trim().toLowerCase();
+  const L=D.filter(d=>{
+    if(S.fav&&!favs.includes(d.w))return false;
+    if(S.cat&&d.c!==S.cat)return false;
+    if(S.letter&&d.w[0].toUpperCase()!==S.letter)return false;
+    if(!q)return true;
+    return S.lang==="en"?d.w.toLowerCase().includes(q):(d.p.includes(q)||d.x.includes(q));
+  });
+  $("cnt").textContent=(S.fav?"Favorites: ":"Words: ")+L.length;
+  $("list").innerHTML=L.length?L.map(d=>`<div class="it" data-w="${d.w}">
+    <div class="row"><div class="wd"><b>${d.w}</b><div class="p ps">${d.p}</div></div>
+    <button class="heart ${favs.includes(d.w)?"f":""}" data-h="${d.w}">${favs.includes(d.w)?"&#9829;":"&#9825;"}</button></div>
+    <div class="det"><div><b>Pronunciation:</b> ${d.pr}</div><div>${d.e}</div><div class="ps">${d.x}</div>
+    <span class="tag">${d.c}</span><br><button class="spk" data-s="${d.w}">&#128266; Listen</button></div></div>`).join(""):'<div class="empty">No words found / لغت ونه موندل شو</div>';
+  document.querySelectorAll(".az span").forEach(s=>s.classList.toggle("on",s.dataset.l===S.letter));
+  $("fb").innerHTML=S.fav?"&#9829;":"&#9825;";
+}
+$("q").oninput=render;
+$("cat").onchange=e=>{S.cat=e.target.value;render()};
+$("le").onclick=()=>{S.lang="en";$("le").classList.add("on");$("lp").classList.remove("on");$("q").placeholder="Search English word";render()};
+$("lp").onclick=()=>{S.lang="ps";$("lp").classList.add("on");$("le").classList.remove("on");$("q").placeholder="پښتو لغت ولټوئ";render()};
+$("az").onclick=e=>{const l=e.target.dataset.l;if(!l)return;S.letter=S.letter===l?"":l;render()};
+$("list").onclick=e=>{
+  const h=e.target.dataset.h,s=e.target.dataset.s;
+  if(h){favs=favs.includes(h)?favs.filter(x=>x!==h):[...favs,h];saveFav();render();return}
+  if(s){speak(s);return}
+  const it=e.target.closest(".it");if(it)it.classList.toggle("open");
+};
+function speak(t){
+  if(!("speechSynthesis" in window)){alert("Speech is not supported on this device.");return}
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=.85;speechSynthesis.speak(u);
+}
+const drawer=o=>{$("dr").classList.toggle("o",o);$("ov").style.display=o?"block":"none"};
+$("mb").onclick=()=>drawer(true);$("ov").onclick=()=>drawer(false);
+$("mAll").onclick=()=>{S.fav=false;S.cat="";S.letter="";$("cat").value="";$("q").value="";drawer(false);render()};
+$("mFav").onclick=()=>{S.fav=true;drawer(false);render()};
+$("fb").onclick=()=>{S.fav=!S.fav;render()};
+function theme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem("gmd_theme",t)}catch(e){}}
+$("mDark").onclick=()=>{theme(document.documentElement.dataset.theme==="dark"?"light":"dark");drawer(false)};
+$("mAbout").onclick=()=>{drawer(false);$("ab").style.display="flex"};
+$("abx").onclick=()=>$("ab").style.display="none";
+try{theme(localStorage.getItem("gmd_theme")||"light")}catch(e){theme("light")}
+render();
+</script>
+</body>
+</html>
